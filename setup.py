@@ -14,14 +14,14 @@ entry_points = {
 
 setup(
     name='slideshow',
-    version='0.0.1',
+    version='0.0.3',
     url='http://www.finklabs.org/',
     author='Mark Fink',
     author_email='mark@finklabs.de',
     description="slideshow is a tool to create a video slideshow from images.",
     #long_description=README + '\n' + CHANGELOG,
     long_description="slideshow is a tool to create a video slideshow from images.",
-    packages=[],
+    packages=['.'],
     include_package_data=True,
     install_requires=requires,
     entry_points=entry_points,
@@ -35,6 +35,5 @@ setup(
         'Topic :: Multimedia :: Graphics :: Presentation',
         'Topic :: Text Processing :: Markup',
         'Topic :: Utilities'
-    ],
-    #test_suite='buccaneer.tests',
+    ]
 )

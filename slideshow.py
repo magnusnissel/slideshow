@@ -2,6 +2,7 @@
 
 import glob
 import os
+import sys
 import uuid
 import subprocess
 from mutagen.mp3 import MP3
@@ -54,19 +55,32 @@ def audio_length(file_name):
 
 
 def main():
-    if os.path.exists(OUTPUT_FILE):
-        os.remove(OUTPUT_FILE)
+    # usage checks
     input_files = find_files()
+    if len(input_files) == 0:
+        print 'you need to provide some *.jpg files\n'
+        sys.exit(1)
+    if not os.path.isfile(AUDIO):
+        print 'you need to provide an audio file with name: %s\n' % AUDIO
+        sys.exit(1)
     total = audio_length(AUDIO)
-    tf_name = '/tmp/%s.mp4' % uuid.uuid4()
+    if len(input_files) * CROSSFADE > total:
+        print 'please make sure that the audio file plays long enough!\n'
+        print 'audio file plays %.2f seconds\n' % total
+        sys.exit(1)
+    tf_name = '/tmp/%s.mp4' % uuid.uuid4()  # tmp filename
+    # run the script
     subprocess.call(script(input_files, total, tf_name), shell=True)
     # add the audio
+    if os.path.exists(OUTPUT_FILE):
+        os.remove(OUTPUT_FILE)
     subprocess.call('ffmpeg -i %s -i %s -codec copy  -shortest %s' % 
         (tf_name, AUDIO, OUTPUT_FILE), shell=True
     )
     # delete tempfile
     if os.path.exists(tf_name):
         os.remove(tf_name)
+
 
 if __name__ == '__main__':
     main()
